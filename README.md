@@ -3,7 +3,7 @@ Functions and workflows for processing Lotek GPS collar data
 
 ### gps_cleaning.ipynb
 A quick overview of the current output from gps_cleaning.ipynb:
-1. For the two files described below, I made the following calculations FIRST, in order:
+**For the two files described below, I made the following calculations FIRST, in order:**
 * Determined which pasture the fix is in from the shapefile (saved as ‘past_mask’)
 * Calculated the distance (m) of each fix from the assigned pasture (saved as ‘distance_nearest’)
 * Calculated the coordinates of the point within the assigned pasture that is nearest to the fix (saved as ‘UTM_X_nearest’, ‘UTM_Y_nearest’)
@@ -11,7 +11,7 @@ A quick overview of the current output from gps_cleaning.ipynb:
 * If the pasture of the fix location (‘past_mask’) was NOT the same as the assigned pasture, I changed the fix location to match ‘UTM_X/Y_nearest’. Otherwise I kept the coordinates as-is. These final coordinates are saved as ‘UTM_X/Y_final’
 * Calculated step length (‘steplength’) in meters and turning angle (‘turnangle’) in degrees from straight line (0-180) using the ‘UTM_X/Y_final’ coordinates
 * Calculated movement rate (‘moverate’) in meters per minute based on step length and step duration
-2. The script then outputs the following two files in the output directory specified (outDIR)
+**The script then outputs the following two files in the output directory specified (outDIR)**
   * *_flagged.csv: this has the following five flags (where 1 is ‘bad’ and 0 is ‘good’) included for each fix
     * jump_flag: suspected jump based on movement rate > 42 m/min and turn angle > 120 degrees
     * fast_flag: suspected error based on movement rate > 84 m/min
