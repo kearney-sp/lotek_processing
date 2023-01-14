@@ -1360,6 +1360,22 @@ df_pred %>%
   geom_smooth(aes(x=as.numeric(pred_rel_bins), y=mean), method=lm) +
   geom_hline(yintercept=1.0, linetype='dashed', color='black')
 
+df_pred %>%
+  group_by(Year, season_str, UTM_X, UTM_Y) %>%
+  summarise(grazing_rel_freq = mean(grazing_rel_freq),
+            pred_rel = mean(pred_rel)) %>%
+  ggplot(aes(x=pred_rel, y=grazing_rel_freq)) +
+  facet_wrap(Year~season_str) +
+  geom_bin2d(bins = 300) +
+  scale_fill_continuous(type = "viridis", 
+                        limits = c(0, 100),
+                        oob = scales::squish) +
+  theme_bw() +
+  coord_cartesian(xlim=c(0, 10), ylim=c(0, 10)) +
+  geom_smooth(aes(x=as.numeric(pred_rel), y=grazing_rel_freq), method=lm) +
+  geom_abline(slope=1, intercept=0) +
+  geom_hline(yintercept=1.0, linetype='dashed', color='black')
+
 
 df_pred_cor <- df_pred %>%
   group_by(Year, season_str) %>%
