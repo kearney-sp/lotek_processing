@@ -71,7 +71,7 @@ summary(example1fit)
 ctPlot(example1fit, 'CR', xlim=c(0, 15))
 
 library(ctsem)
-df_sub <- df %>% filter(Year == 2017) %>%
+df_sub <- df %>% filter(Year == 2017 & Pasture == '15E') %>%
   mutate(ID = paste(UTM_X, UTM_Y, sep="_")) %>%
   na.omit(.)
 #  group_by(week) %>% slice_sample(n=500)
@@ -119,8 +119,15 @@ example1model <- ctModel(type='stanct',
                          manifestNames = c("Biomass", "CP", "grazing_rel_freq"),
                          latentNames = c("Biomass", "CP", "grazing_rel_freq"),
                          TIpredNames = c("dFence", "dTank"),
+                         tipredDefault = TRUE,
                          LAMBDA = diag(3), 
-                         TRAITVAR = "auto")
+                         TRAITVAR = NULL,
+                         MANIFESTMEANS = matrix(c(0, 0, 0)),
+                         #MANIFESTVAR = matrix(c(0, 0, 0), nrow=3, ncol = 3)
+                         )
+example1model$pars[example1model$pars$matrix == 'DRIFT', 
+                   c('dFence_effect', 'dTank_effect')] = TRUE
+example1model$pars
 print(example1model)
 
 example1fit <- ctStanFit(dat = long, cores=10, 
@@ -128,6 +135,8 @@ example1fit <- ctStanFit(dat = long, cores=10,
                          ctstanmodel = example1model)
 summary(example1fit)
 plot(example1fit)
+
+ctModelLatex(example1model)
 
 grz_sem <- psem(
   lme(grz_lag_avg ~ dFence + dTank,
